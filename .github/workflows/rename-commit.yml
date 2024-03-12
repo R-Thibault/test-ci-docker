@@ -21,7 +21,6 @@ jobs:
       - name: Add branch name to commits
         run: |
           BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
-          git checkout -b temp-branch
           for COMMIT in $(git rev-list --all)
           do
             git cherry-pick $COMMIT
