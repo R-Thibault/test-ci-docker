@@ -1,0 +1,25 @@
+name: Add Branch Name to Commits
+
+on:
+  pull_request:
+    branches:
+      - main # Adjust the branch name as needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Add branch name to commits
+        run: |
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+          git checkout -b temp-branch
+          for COMMIT in $(git rev-list --all)
+          do
+            git cherry-pick $COMMIT
+            git commit --amend -m "[$BRANCH_NAME] $(git log --format=%B -n 1 $COMMIT)"
+          done
+          git push origin temp-branch
