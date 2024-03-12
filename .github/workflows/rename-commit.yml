@@ -23,6 +23,9 @@ jobs:
           git checkout -b temp-branch
           for COMMIT in $(git rev-list --all)
           do
+            if git log --oneline | grep -q $(git log --format=%H -n 1 $COMMIT); then
+              continue
+            fi
             git cherry-pick $COMMIT
             if [ $? -ne 0 ]; then
               git cherry-pick --continue
