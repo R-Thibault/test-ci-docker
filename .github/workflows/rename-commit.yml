@@ -28,6 +28,10 @@ jobs:
               git cherry-pick --continue
               continue
             fi
+            if git show --stat | grep -q "0 insertions"; then
+              git reset --hard HEAD~1
+              continue
+            fi
             git commit --amend -m "[$BRANCH_NAME] $(git log --format=%B -n 1 $COMMIT)"
           done
           git push origin temp-branch
