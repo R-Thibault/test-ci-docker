@@ -25,7 +25,7 @@ jobs:
           do
             git cherry-pick $COMMIT
             if [ $? -ne 0 ]; then
-              git cherry-pick --skip
+              git cherry-pick --continue
               continue
             fi
             git commit --amend -m "[$BRANCH_NAME] $(git log --format=%B -n 1 $COMMIT)"
