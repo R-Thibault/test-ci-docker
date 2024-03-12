@@ -16,6 +16,7 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
+          git checkout -b temp-branch
 
       - name: Add branch name to commits
         run: |
@@ -24,6 +25,10 @@ jobs:
           for COMMIT in $(git rev-list --all)
           do
             git cherry-pick $COMMIT
+            if [ $? -ne 0 ]; then
+              git cherry-pick --skip
+              continue
+            fi
             git commit --amend -m "[$BRANCH_NAME] $(git log --format=%B -n 1 $COMMIT)"
           done
           git push origin temp-branch
